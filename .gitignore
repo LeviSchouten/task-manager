@@ -2,7 +2,6 @@
 node_modules/
 data/
 dist/
-tsconfig.build.json
 yarn.lock
 
 # protected

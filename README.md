@@ -33,3 +33,5 @@ SECRET=secret
 ```
 docker-compose up --build
 ```
+
+5. You can now view the API on http://localhost:3000/
