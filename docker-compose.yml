@@ -19,11 +19,9 @@ services:
       - database
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend/src:/usr/src/app/src
     ports:
       - 3000:3000
     env_file:
