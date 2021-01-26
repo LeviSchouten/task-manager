@@ -5,7 +5,10 @@ import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
+import { JwtToken } from './interfaces/jwt-token.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -18,8 +21,6 @@ export class UserRepository extends Repository<User> {
     user.isAdmin = isAdmin || false;
     user.password = await bcrypt.hash(password, user.salt);
 
-    console.log(user);
-
     try {
       await user.save();
     } catch (error) {
@@ -29,5 +30,20 @@ export class UserRepository extends Repository<User> {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.findOne({ username });
+
+    if (!user) {
+      throw new NotFoundException(`User with username "${username}" not found`);
+    }
+
+    if (user.password !== (await bcrypt.hash(password, user.salt))) {
+      throw new UnauthorizedException('Incorrect password');
+    }
+
+    return user;
   }
 }

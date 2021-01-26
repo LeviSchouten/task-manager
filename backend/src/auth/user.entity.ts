@@ -1,7 +1,9 @@
+import { Task } from 'src/tasks/task.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -23,4 +25,18 @@ export class User extends BaseEntity {
 
   @Column()
   isAdmin: boolean;
+
+  @OneToMany(
+    type => Task,
+    task => task.createdBy,
+    { eager: true },
+  )
+  createdTasks: Task[];
+
+  @OneToMany(
+    type => Task,
+    task => task.createdBy,
+    { eager: true },
+  )
+  completedTasks: Task[];
 }
